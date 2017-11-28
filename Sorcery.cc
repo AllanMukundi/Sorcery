@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include "Player.h"
 
 using namespace std;
@@ -11,11 +12,12 @@ int main(int argc, char *argv[]) {
     string deck1 = "default.deck";
     string deck2 = "default.deck";
     string initfile = "";
+    ifstream ifs;
     bool init     = false;
     bool testing  = false;
     bool graphics = false;
-    //Player *activePlayer = nullptr;
-    //Player *nonActivePlayer = nullptr;
+    Player *activePlayer = nullptr;
+    Player *nonActivePlayer = nullptr;
 
     // change default state from command line arguments
     for (int i = 1; i < argc; ++i) { 
@@ -25,6 +27,7 @@ int main(int argc, char *argv[]) {
         if (string(argv[i]) == "-graphics") graphics = true;
         if (string(argv[i]) == "-init") {
             initfile = argv[i+1];
+            ifs.open(initfile);
             init = true;
         }
     }
@@ -37,18 +40,27 @@ int main(int argc, char *argv[]) {
     cout << "deck2: " << deck2 << endl;
 
     // The game begins by first asking both players for their names.
-    cout << "Player 1, please enter your name" << endl;
     string playerOneName;
-    cin >> playerOneName;
-    cout << "Player 2, please enter your name" << endl;
     string playerTwoName;
-    cin >> playerTwoName;
-   
+    if (init) {
+        ifs >> playerOneName;
+        ifs >> playerTwoName;
+    } else {
+        cout << "Player 1, please enter your name:" << endl;
+        cin >> playerOneName;
+        cout << "Player 2, please enter your name:" << endl;
+        cin >> playerTwoName;
+    }
+    
     cout << "Welcome, " << playerOneName << " and " << playerTwoName << "!" << endl;
 
     // Create players - this also shuffles and sets up decks and hands
     Player playerOne(playerOneName);
     Player playerTwo(playerTwoName);
+    playerOne.setOpponent(&playerTwo);
+    playerTwo.setOpponent(&playerOne);
+    activePlayer = &playerOne;
+    nonActivePlayer = &playerTwo;
 
     // game begins within no command, so first effects must occur right away
     // activePlayer.updateMana(activePlayer.mana++);
@@ -56,12 +68,23 @@ int main(int argc, char *argv[]) {
 
     string command;
 
-    while(cin >> command) {
+    while(true) {
         int minion = 0;
         int card = 0;
         int targetPlayer = 0;
         int otherMinion = 0;
         string tmp, targetCard;
+
+        if (init) {
+            ifs >> command;
+        } if(!init || ifs.eof()) {
+            cin >> command;
+            init = false;
+        }
+
+        if (cin.fail()) {
+            break;
+        }
 
         if (command == "help") {
             cout << "Commands:\n"
@@ -78,14 +101,18 @@ int main(int argc, char *argv[]) {
         } else if (command == "end") {
             // end of turn events occur for current player
             cout << "end" << endl;
-            // swap(activePlayer, nonActivePlayer);
+            swap(activePlayer, nonActivePlayer);
             // activePlayer.updateMana(activePlayer.mana++);
             // activePlayer.drawFromDeck();
             // beginning of turn events occur for new player
         } else if (command == "quit") {
             break;
         } else if (command == "attack") {
-            getline(cin, tmp);
+            if (init) {
+                getline(ifs, tmp);
+            } else {
+                getline(cin, tmp);
+            }
             istringstream iss {tmp};
             int count = 0;
             while (iss >> tmp) {
@@ -102,7 +129,11 @@ int main(int argc, char *argv[]) {
                 cout << "Active player's minion " << minion << " is attacking the other player" << endl;
             }
         } else if (command == "play") {
-            getline(cin, tmp);
+            if (init) {
+                getline(ifs, tmp);
+            } else {
+                getline(cin, tmp);
+            }
             istringstream iss {tmp};
             int count = 0;
             while (iss >> tmp) {
@@ -124,7 +155,11 @@ int main(int argc, char *argv[]) {
                 cout << "Playing card: " << card << endl;
             }
         } else if (command == "use") {
-            getline(cin, tmp);
+            if (init) {
+                getline(ifs, tmp);
+            } else {
+                getline(cin, tmp);
+            }
             istringstream iss {tmp};
             int count = 0;
             while (iss >> tmp) {
