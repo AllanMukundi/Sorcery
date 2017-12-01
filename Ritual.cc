@@ -1,5 +1,5 @@
-#include <string>
 #include <iostream>
+#include <string>
 #include "Ritual.h"
 #include "Player.h"
 
@@ -66,7 +66,6 @@ void Ritual::setAC(const int newAC) {
     activationCost = newAC;
 }
 
-void Ritual::display() {
-    card_template_t card = display_ritual(name, cost, activationCost, info, numCharges);
-    printCard(card);
+card_template_t Ritual::display() {
+    return display_ritual(name, cost, activationCost, info, numCharges);
 }

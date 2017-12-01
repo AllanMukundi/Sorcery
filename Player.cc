@@ -42,9 +42,12 @@ void Player::drawFromDeck() {
 }
 
 void Player::showHand() { 
-    for (auto card : hand) {
-        card->display();
+  for (int i = 0; i < display_minion_no_ability("",0,0,0).size(); ++i) {
+    for (auto c:hand) {
+      cout << c->display()[i];
     }
+    cout << endl;
+  }
 }
 
 // Constant Getters
@@ -52,6 +55,7 @@ State Player::getState() const { return state; }
 int Player::getNum()     const { return playerNum; }
 int Player::getHealth()  const { return health; }
 int Player::getMana()    const { return mana; }
+string Player::getName() const { return name; }
 
 // Mutable Getters
 vector<shared_ptr<Minion>> &Player::getGrave() { return grave; }
@@ -77,8 +81,8 @@ void Player::removeFromHand(Card *card) {
 }
 
 
-void Player::display() {
+card_template_t Player::display() {
     card_template_t card = display_player_card(playerNum, name, health, mana);
-    printCard(card);
+    return card;
 }
 

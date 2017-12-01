@@ -96,8 +96,7 @@ void Spell::effect(Board &b, Player &p, int target) {
        }
    
 }
-void Spell::display() {
-    card_template_t card = display_spell(name, cost, info);
-    printCard(card);
+card_template_t Spell::display() {
+  return display_spell(name, cost, info);
 }
 

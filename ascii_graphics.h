@@ -9,8 +9,6 @@
 
 typedef std::vector<std::string> card_template_t;
 
-void printCard(card_template_t);
-
 card_template_t display_minion_no_ability(std::string name,int cost,int attack,int defence);
 card_template_t display_minion_triggered_ability(std::string name,int cost,int attack,int defence,
                                                  std::string trigger_desc);

@@ -14,10 +14,14 @@ void Minion::changeDefence(int amount) { defence += amount; }
 int Minion::getAttack() const { return attack;}
 int Minion::getDefence() const { return defence;}
 
-void Minion::display() {
-    // note: the manifest must be altered to support printing minions with abilities
-    card_template_t card = display_minion_no_ability(name, cost, attack, defence);
-    printCard(card);
+card_template_t Minion::display() {
+    //if (triggered_ability) {
+      //return display_minion_triggered_ability(std::string name,int cost,int attack,int defence, std::string trigger_desc);
+    //} else if(activated_ability) {
+      //return display_minion_activated_ability(std::string name,int cost,int attack,int defence, int ability_cost, std::string ability_desc);
+    //} else {
+      return display_minion_no_ability(name, cost, attack, defence);
+    //}
 }
 
 void Minion::attackMinion(Minion &m) {
