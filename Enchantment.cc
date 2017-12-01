@@ -8,7 +8,7 @@ Enchantment::Enchantment(string name, int cost, string info):
 
 card_template_t Enchantment::display() {
   //if (attack_defence_enchantment) {
-    //return display_enchantment_attack_defence(std::string name,int cost,std::string desc, std::string attack,std::string defence);
+    //return display_enchantment_attack_defence(name, cost, info, attack, defence);
   //} else {
     return display_enchantment(name, cost, info);
   //}

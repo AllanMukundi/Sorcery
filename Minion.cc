@@ -16,9 +16,9 @@ int Minion::getDefence() const { return defence;}
 
 card_template_t Minion::display() {
     //if (triggered_ability) {
-      //return display_minion_triggered_ability(std::string name,int cost,int attack,int defence, std::string trigger_desc);
+      //return display_minion_triggered_ability(name, cost, attack, defence, trigger_desc);
     //} else if(activated_ability) {
-      //return display_minion_activated_ability(std::string name,int cost,int attack,int defence, int ability_cost, std::string ability_desc);
+      //return display_minion_activated_ability(name, cost, attack, defence, abilityCost, ability_desc);
     //} else {
       return display_minion_no_ability(name, cost, attack, defence);
     //}
