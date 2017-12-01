@@ -30,6 +30,7 @@ void Minion::attackPlayer(Player &p) {
 }
 
 void Minion::notify(Board &b, Player &p, int target) {
+    trigger(b, p);
 }
 
 void Minion::trigger(Board &b, Player &p) {
