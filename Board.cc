@@ -101,7 +101,12 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
 
 void Board::attackMinion(int currentPlayer, int minion, int otherMinion) {
   int otherPlayer = (currentPlayer == 1 ? 2 : 1);
-  getCards(currentPlayer).at(minion - 1)->attackMinion(*getCards(otherPlayer).at(otherMinion - 1));
+  shared_ptr<Minion> m1 = getCards(currentPlayer).at(minion - 1);
+  shared_ptr<Minion> m2 = getCards(otherPlayer).at(otherMinion - 1);
+
+  m1->attackMinion(*m2);
+  if (m1->getDefence() <= 0) toGrave(minion, currentPlayer);
+  if (m2->getDefence() <= 0) toGrave(otherMinion, otherPlayer);
 }
 
 void Board::attackPlayer(int currentPlayer, int minion) {
@@ -145,4 +150,83 @@ void Board::setRitual(shared_ptr<Ritual> ritual, int playerNum) {
 }
 
 void Board::display() {
+  const int p1mc = cardsP1.size(); 
+  const int p2mc = cardsP2.size(); 
+  bool p1Grave = (playerOne->getGrave().size() != 0);
+  bool p2Grave = (playerTwo->getGrave().size() != 0);
+
+  // Print top border of board
+  cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
+  for (int i = 0; i < boardWidth; ++i) cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+  cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT << endl;
+
+  // Print first row
+  for (int i = 0; i < cardHeight; ++i) {
+    cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+    if (ritualP1) {
+      cout << ritualP1->display()[i];
+    } else {
+      cout << CARD_TEMPLATE_EMPTY[i];
+    }
+    cout << CARD_TEMPLATE_EMPTY[i];
+    cout << playerOne->display()[i];
+    cout << CARD_TEMPLATE_EMPTY[i];
+    if (p1Grave) {
+      cout << playerOne->getGrave().back()->display()[i];
+    } else {
+      cout << CARD_TEMPLATE_EMPTY[i];
+    }
+    cout << EXTERNAL_BORDER_CHAR_UP_DOWN << endl;
+  }
+
+  // Print second row
+  for (int i = 0; i < cardHeight; ++i) {
+    cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+    for (int j = 0; j < p1mc; ++j) {
+      cout << cardsP1.at(j)->display()[i];
+    }
+    for (int j = p1mc; j < 5; ++j) {
+      cout << CARD_TEMPLATE_EMPTY[i];
+    }
+    cout << EXTERNAL_BORDER_CHAR_UP_DOWN << endl;
+  }
+
+  // Print Sorcery
+  for (int i = 0; i < CENTRE_GRAPHIC.size(); ++i) cout << CENTRE_GRAPHIC[i] << endl;
+
+  // Print third row
+  for (int i = 0; i < cardHeight; ++i) {
+    cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+    for (int j = 0; j < p2mc; ++j) {
+      cout << cardsP2.at(j)->display()[i];
+    }
+    for (int j = p2mc; j < 5; ++j) {
+      cout << CARD_TEMPLATE_EMPTY[i];
+    }
+    cout << EXTERNAL_BORDER_CHAR_UP_DOWN << endl;
+  }
+
+  // Print fourth row
+  for (int i = 0; i < cardHeight; ++i) {
+    cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+    if (ritualP2) {
+      cout << ritualP2->display()[i];
+    } else {
+      cout << CARD_TEMPLATE_EMPTY[i];
+    }
+    cout << CARD_TEMPLATE_EMPTY[i];
+    cout << playerTwo->display()[i];
+    cout << CARD_TEMPLATE_EMPTY[i];
+    if (p2Grave) {
+      cout << playerTwo->getGrave().back()->display()[i];
+    } else {
+      cout << CARD_TEMPLATE_EMPTY[i];
+    }
+    cout << EXTERNAL_BORDER_CHAR_UP_DOWN << endl;
+  }
+
+  // Print bottom border of board
+  cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
+  for (int i = 0; i < boardWidth; ++i) cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+  cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << endl;
 }
