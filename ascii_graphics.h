@@ -9,7 +9,7 @@
 
 typedef std::vector<std::string> card_template_t;
 const int boardWidth = 165;
-const int cardHeight = 11; 
+const int cardHeight = 11;
 
 card_template_t display_minion_no_ability(std::string name,int cost,int attack,int defence);
 card_template_t display_minion_triggered_ability(std::string name,int cost,int attack,int defence,
