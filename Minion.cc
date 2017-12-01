@@ -33,12 +33,12 @@ void Minion::notify(Board &b, Player &p, int target) {
 }
 
 void Minion::trigger(Board &b, Player &p) {
-    if (triggeredAbility == "Gain Both") {
+    if (triggeredAbility == "Gain Both") { // Gain +1/+1 when a minion leaves play
         if (p.getState() == State::MinionLeave || p.getState() == State::MinionLeaveOpp) {
             changeAttack(1);
             changeDefence(1);
         }
-    } else if (triggeredAbility == "Deal One") {
+    } else if (triggeredAbility == "Deal One") { // Deal 1dmg to opponent's played minion
         if (p.getState() == State::MinionEnterOpp) {
             int oppNum = p.getNum() == 1 ? 2 : 1;
             vector<shared_ptr<Minion>> minions = b.getCards(oppNum);
@@ -47,7 +47,7 @@ void Minion::trigger(Board &b, Player &p) {
                 b.toGrave(minions.size(), oppNum);
             }
         }
-    } else if (triggeredAbility == "Gain Defence") {
+    } else if (triggeredAbility == "Gain Defence") { // All minions gain +0/+1 at the end of your turn
         if (p.getState() == State::EndTurn) {
             vector<shared_ptr<Minion>> cards = b.getCards(p.getNum());
             for(auto minion : cards) {
