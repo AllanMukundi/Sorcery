@@ -145,10 +145,10 @@ void Board::display() {
       cout << CARD_TEMPLATE_EMPTY[i];
     }
     cout << CARD_TEMPLATE_EMPTY[i];
-    cout << playerTwo->display()[i];
+    cout << playerOne->display()[i];
     cout << CARD_TEMPLATE_EMPTY[i];
     if (p1Grave) {
-      cout << playerTwo->getGrave().back()->display()[i];
+      cout << playerOne->getGrave().back()->display()[i];
     } else {
       cout << CARD_TEMPLATE_EMPTY[i];
     }
