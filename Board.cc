@@ -26,10 +26,10 @@ vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
 
 void Board::toGrave(int slot, int playerNum) {
   if (playerNum == 1) {
-    playerOne->getGrave().push_back(cardsP1[slot]);
+    playerOne->getGrave().push_back(cardsP1[slot - 1]);
     cardsP1.erase(cardsP1.begin() + slot - 1);
   } else {
-    playerTwo->getGrave().push_back(cardsP2[slot]);
+    playerTwo->getGrave().push_back(cardsP2[slot - 1]);
     cardsP2.erase(cardsP2.begin() + slot - 1);
   }
 }
@@ -80,7 +80,12 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
 
 void Board::attackMinion(int currentPlayer, int minion, int otherMinion) {
   int otherPlayer = (currentPlayer == 1 ? 2 : 1);
-  getCards(currentPlayer).at(minion - 1)->attackMinion(*getCards(otherPlayer).at(otherMinion - 1));
+  shared_ptr<Minion> m1 = getCards(currentPlayer).at(minion - 1);
+  shared_ptr<Minion> m2 = getCards(otherPlayer).at(otherMinion - 1);
+
+  m1->attackMinion(*m2);
+  if (m1->getDefence() <= 0) toGrave(minion, currentPlayer);
+  if (m2->getDefence() <= 0) toGrave(otherMinion, otherPlayer);
 }
 
 void Board::attackPlayer(int currentPlayer, int minion) {
