@@ -24,43 +24,28 @@ vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
 
 
 void Board::toGrave(int slot, int playerNum) {
-    if (playerNum == 1) {
-        playerOne->getGrave().push_back(cardsP1[slot]);
-        cardsP1.erase(cardsP1.begin() + slot - 1);
-        playerOne->setState(State::MinionLeave);
-        playerOne->notifyObservers();
-        playerTwo->setState(State::MinionLeaveOpp);
-        playerTwo->notifyObservers();
-
-    } else {
-        playerTwo->getGrave().push_back(cardsP2[slot]);
-        cardsP2.erase(cardsP2.begin() + slot - 1);
-        playerTwo->setState(State::MinionLeave);
-        playerTwo->notifyObservers();
-        playerOne->setState(State::MinionLeaveOpp);
-        playerOne->notifyObservers();
-    }
+    Player *player = (playerNum == 1) ? playerOne : playerTwo;
+    Player *opponent = (player == playerOne) ? playerTwo : playerOne;
+    vector<shared_ptr<Minion>> cards = (playerNum == 1) ? getCards(1) : getCards(2);
+    player->getGrave().push_back(cards[slot]);
+    cards.erase(cards.begin() + slot - 1);
+    player->setState(State::MinionLeave);
+    player->notifyObservers();
+    opponent->setState(State::MinionLeaveOpp);
+    opponent->notifyObservers();
 }
 
 void Board::toHand(int slot, int playerNum) {
-    if (playerNum == 1) {
-        playerOne->getHand().push_back(cardsP1[slot]);
-        cardsP1.erase(cardsP1.begin() + slot - 1);
-        playerOne->setState(State::MinionLeave);
-        playerOne->notifyObservers();
-        playerTwo->setState(State::MinionLeaveOpp);
-        playerTwo->notifyObservers();
-
-    } else {
-        playerTwo->getHand().push_back(cardsP2[slot]);
-        cardsP2.erase(cardsP2.begin() + slot - 1);
-        playerTwo->setState(State::MinionLeave);
-        playerTwo->notifyObservers();
-        playerOne->setState(State::MinionLeaveOpp);
-        playerOne->notifyObservers();
-    }
+    Player *player = (playerNum == 1) ? playerOne : playerTwo;
+    Player *opponent = (player == playerOne) ? playerTwo : playerOne;
+    vector<shared_ptr<Minion>> cards = (playerNum == 1) ? getCards(1) : getCards(2);
+    player->getHand().push_back(cards[slot]);
+    cards.erase(cards.begin() + slot - 1);
+    player->setState(State::MinionLeave);
+    player->notifyObservers();
+    opponent->setState(State::MinionLeaveOpp);
+    opponent->notifyObservers();
 }
-
 
 void Board::playCardP1(int slot, int player, int otherSlot) {
   shared_ptr<Card> c = playerOne->getHand().at(slot - 1);              // slot - 1 becauase vector starts 0, slot starts 1
