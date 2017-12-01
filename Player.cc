@@ -42,7 +42,7 @@ void Player::drawFromDeck() {
 }
 
 void Player::showHand() { 
-  for (int i = 0; i < display_minion_no_ability("",0,0,0).size(); ++i) {
+  for (int i = 0; i < cardHeight; ++i) {
     for (auto c:hand) {
       cout << c->display()[i];
     }

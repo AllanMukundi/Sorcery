@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Board.h"
 #include "Card.h"
-#include "ascii_graphics.h"
 
 using namespace std;
 
@@ -129,16 +128,14 @@ void Board::setRitual(shared_ptr<Ritual> ritual, int playerNum) {
 }
 
 void Board::display() {
-  const int cardHeight = display_minion_no_ability("",0,0,0).size();
   const int p1mc = cardsP1.size(); 
   const int p2mc = cardsP2.size(); 
-  const int boardWidth = 164;
   bool p1Grave = (playerOne->getGrave().size() != 0);
   bool p2Grave = (playerTwo->getGrave().size() != 0);
 
   // Print top border of board
   cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
-  for (int i = 0; i < boardWidth + 1; ++i) cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+  for (int i = 0; i < boardWidth; ++i) cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
   cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT << endl;
 
   // Print first row
@@ -208,6 +205,6 @@ void Board::display() {
 
   // Print bottom border of board
   cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
-  for (int i = 0; i < boardWidth + 1; ++i) cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+  for (int i = 0; i < boardWidth; ++i) cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
   cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << endl;
 }
