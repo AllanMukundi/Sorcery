@@ -28,7 +28,6 @@ class Player: public Subject {
     State getState() const;
     int getNum() const;
     int getHealth() const;
-    std::string getName() const;
     void showHand();
     void notifyObservers() override;
     void removeFromHand(Card *cardToRemove); 
