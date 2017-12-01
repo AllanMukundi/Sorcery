@@ -5,8 +5,8 @@
 
 using namespace std;
 
-Minion::Minion(string name, int cost, string info, int attack, int defence, int abilityCost):
-    Card{name, cost, info, "Minion"}, attack{attack}, defence{defence}, abilityCost(abilityCost)  {} 
+Minion::Minion(string name, int cost, string info, int attack, int defence, string triggeredAbility, int abilityCost):
+    Card{name, cost, info, "Minion"}, attack{attack}, defence{defence}, triggeredAbility {triggeredAbility}, abilityCost(abilityCost)  {} 
 
 void Minion::changeAttack(int amount) { attack += amount; }
 void Minion::changeDefence(int amount) { defence += amount; }
@@ -26,9 +26,33 @@ void Minion::attackMinion(Minion &m) {
 }
 
 void Minion::attackPlayer(Player &p) {
-  p.changeHealth( -1 * attack);
+  p.changeHealth(-1 * attack);
 }
 
 void Minion::notify(Board &b, Player &p, int target) {
 }
 
+void Minion::trigger(Board &b, Player &p) {
+    if (triggeredAbility == "Gain Both") {
+        if (p.getState() == State::MinionLeave || p.getState() == State::MinionLeaveOpp) {
+            changeAttack(1);
+            changeDefence(1);
+        }
+    } else if (triggeredAbility == "Deal One") {
+        if (p.getState() == State::MinionEnterOpp) {
+            int oppNum = p.getNum() == 1 ? 2 : 1;
+            vector<shared_ptr<Minion>> minions = b.getCards(oppNum);
+            b.attackMinion(p.getNum(), 1, minions.size());
+            if (minions.at(minions.size()-1)->getDefence() <= 0) {
+                b.toGrave(minions.size(), oppNum);
+            }
+        }
+    } else if (triggeredAbility == "Gain Defence") {
+        if (p.getState() == State::EndTurn) {
+            vector<shared_ptr<Minion>> cards = b.getCards(p.getNum());
+            for(auto minion : cards) {
+                minion->changeDefence(1);
+            }
+        }
+    }
+}

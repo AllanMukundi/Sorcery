@@ -24,14 +24,43 @@ vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
 
 
 void Board::toGrave(int slot, int playerNum) {
-  if (playerNum == 1) {
-    playerOne->getGrave().push_back(cardsP1[slot]);
-    cardsP1.erase(cardsP1.begin() + slot - 1);
-  } else {
-    playerTwo->getGrave().push_back(cardsP2[slot]);
-    cardsP2.erase(cardsP2.begin() + slot - 1);
-  }
+    if (playerNum == 1) {
+        playerOne->getGrave().push_back(cardsP1[slot]);
+        cardsP1.erase(cardsP1.begin() + slot - 1);
+        playerOne->setState(State::MinionLeave);
+        playerOne->notifyObservers();
+        playerTwo->setState(State::MinionLeaveOpp);
+        playerTwo->notifyObservers();
+
+    } else {
+        playerTwo->getGrave().push_back(cardsP2[slot]);
+        cardsP2.erase(cardsP2.begin() + slot - 1);
+        playerTwo->setState(State::MinionLeave);
+        playerTwo->notifyObservers();
+        playerOne->setState(State::MinionLeaveOpp);
+        playerOne->notifyObservers();
+    }
 }
+
+void Board::toHand(int slot, int playerNum) {
+    if (playerNum == 1) {
+        playerOne->getHand().push_back(cardsP1[slot]);
+        cardsP1.erase(cardsP1.begin() + slot - 1);
+        playerOne->setState(State::MinionLeave);
+        playerOne->notifyObservers();
+        playerTwo->setState(State::MinionLeaveOpp);
+        playerTwo->notifyObservers();
+
+    } else {
+        playerTwo->getHand().push_back(cardsP2[slot]);
+        cardsP2.erase(cardsP2.begin() + slot - 1);
+        playerTwo->setState(State::MinionLeave);
+        playerTwo->notifyObservers();
+        playerOne->setState(State::MinionLeaveOpp);
+        playerOne->notifyObservers();
+    }
+}
+
 
 void Board::playCardP1(int slot, int player, int otherSlot) {
   shared_ptr<Card> c = playerOne->getHand().at(slot - 1);              // slot - 1 becauase vector starts 0, slot starts 1
@@ -41,6 +70,10 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
     if (c->getType() == "Minion") {
       cout << "Playing minion: " << c->getName() << endl;
       cardsP1.push_back(dynamic_pointer_cast<Minion>(c));
+      playerOne->setState(State::MinionEnter);
+      playerOne->notifyObservers();
+      playerTwo->setState(State::MinionEnterOpp);
+      playerTwo->notifyObservers();
       cout << "Minion added to P1 field: " << cardsP1.back()->getName() << endl;
     } else if (c->getType() == "Spell") { // TODO: add && to check if spell requires no target
       cout << "Playing spell: " << c->getName() << endl;
@@ -64,6 +97,10 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
     if (c->getType() == "Minion") {
       cout << "Playing minion: " << c->getName() << endl;
       cardsP2.push_back(dynamic_pointer_cast<Minion>(c));
+      playerTwo->setState(State::MinionEnter);
+      playerTwo->notifyObservers();
+      playerOne->setState(State::MinionEnterOpp);
+      playerOne->notifyObservers();
       cout << "Minion added to P2 field: " << cardsP2.back()->getName() << endl;
     } else if (c->getType() == "Spell") { // TODO: add && to check if spell requires no target
       cout << "Playing spell: " << c->getName() << endl;
@@ -102,7 +139,7 @@ void Board::notify(Player &p) {
   for(unsigned int i = 0; i < cards.size(); ++i) {
       cards[i]->notify(*this, p);
   }
-  ritual->notify(*this, p);
+  if (ritual) ritual->notify(*this, p);
 }
 
 shared_ptr<Ritual> Board::getRitual(int playerNum) const {
