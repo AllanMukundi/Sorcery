@@ -174,7 +174,7 @@ void Board::display() {
   for (int i = 0; i < cardHeight; ++i) {
     cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
     for (int j = 0; j < p2mc; ++j) {
-      cout << cardsP1.at(j)->display()[i];
+      cout << cardsP2.at(j)->display()[i];
     }
     for (int j = p2mc; j < 5; ++j) {
       cout << CARD_TEMPLATE_EMPTY[i];
