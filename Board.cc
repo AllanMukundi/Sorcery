@@ -170,7 +170,7 @@ void Board::display() {
   }
 
   // Print Sorcery
-  for (int i = 0; i < CENTRE_GRAPHIC.size(); ++i) cout << CENTRE_GRAPHIC[i] << endl;
+  for (unsigned int i = 0; i < CENTRE_GRAPHIC.size(); ++i) cout << CENTRE_GRAPHIC[i] << endl;
 
   // Print third row
   for (int i = 0; i < cardHeight; ++i) {

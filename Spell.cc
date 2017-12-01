@@ -85,7 +85,7 @@ void Spell::effect(Board &b, Player &p, int target) {
         else if (name ==  "Unsummon") {
             vector<shared_ptr<Card>> &hand = p.getHand();            
             vector<shared_ptr<Minion>> minions = b.getCards(playerNum);
-            if (minions.size() >= target) {
+            if ((int)minions.size() >= target) {
                 // - 1 to account for vector starting at 0
                 shared_ptr<Minion> targetMin = minions.at(target - 1);
                 minions.erase(minions.begin() + target - 1);
