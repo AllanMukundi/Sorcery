@@ -69,8 +69,8 @@ int main(int argc, char *argv[]) {
 
     activePlayer    = &playerOne;
     nonActivePlayer = &playerTwo;
-    board.setP1(&playerOne);
-    board.setP2(&playerTwo);
+    board.setPlayer(&playerOne, 1);
+    board.setPlayer(&playerTwo, 2);
     playerOne.addObserver(&board);
     playerTwo.addObserver(&board);
 

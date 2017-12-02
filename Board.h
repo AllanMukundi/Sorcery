@@ -17,8 +17,7 @@ class Board: public Observer{
   std::vector<std::shared_ptr<Minion>> cardsP2;
   public:
     Board();
-    void setP1(Player *p);
-    void setP2(Player *p);
+    void setPlayer(Player *p, int playerNum);
     std::vector<std::shared_ptr<Minion>> &getCards(int playerNum);
     void playCardP1(int slot, int player = 0, int otherSlot = 0); // play card at P1 slot
     void playCardP2(int slot, int player = 0, int otherSlot = 0); // can be refactored later 

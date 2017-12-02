@@ -6,12 +6,12 @@ using namespace std;
 
 Board::Board() {}
 
-void Board::setP1(Player *p) {
+void Board::setPlayer(Player *p, int playerNum) {
+  if (playerNum == 1) {
     playerOne = p;
-}
-
-void Board::setP2(Player *p) {
+  } else {
     playerTwo = p;
+  }
 }
 
 vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
@@ -62,7 +62,7 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
     } else if (c->getType() == "Spell") { // TODO: add && to check if spell requires no target
       cout << "Playing spell: " << c->getName() << endl;
     } else if (c->getType() == "Ritual") {
-        ritualP1 = dynamic_pointer_cast<Ritual>(c);
+      ritualP1 = dynamic_pointer_cast<Ritual>(c);
     }
 
   } else {
