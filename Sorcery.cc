@@ -4,6 +4,7 @@
 #include <fstream>
 #include "Player.h"
 #include "Board.h"
+#include "GraphicBoard.h"
 
 using namespace std;
 
@@ -57,7 +58,8 @@ int main(int argc, char *argv[]) {
     cout << "Welcome, " << playerOneName << " and " << playerTwoName << "!" << endl;
 
     // Create players - this also shuffles and sets up decks and hands
-    Board board = Board();
+    Board board;
+    GraphicBoard gb(500);
     Player playerOne(playerOneName, 1);
     Player playerTwo(playerTwoName, 2);
     activePlayer = &playerOne;

@@ -7,8 +7,7 @@
 #include "Minion.h"
 #include "Observer.h"
 
-class Subject;
-class Board: public Observer{
+class Board: public Observer {
   Player *playerOne = nullptr;
   Player *playerTwo = nullptr;
   std::shared_ptr<Ritual> ritualP1 = nullptr;

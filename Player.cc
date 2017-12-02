@@ -9,7 +9,7 @@
 using namespace std;
 
 Player::Player(string name, int playerNum) : name {name}, playerNum {playerNum} {
-    state = State::None;
+    state = State::NoState;
     //Create initial Deck - note this is all cards and not players deck
     Deck allCards = Deck(true);
     // Randomly choose 20 cards from all cards vector to go in deck
