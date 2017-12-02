@@ -24,7 +24,7 @@ void Ritual::effect(Board &b, Player &p, int target) {
       }
   } else if (name == "Aura of Power") {
       if (p.getState() == State::MinionEnter) {
-          vector<shared_ptr<Minion>> cards = b.getCards(playerNum);
+          vector<shared_ptr<Minion>> &cards = b.getCards(playerNum);
           cards[cards.size()-1]->changeAttack(1);
           cards[cards.size()-1]->changeDefence(1);
           numCharges -= activationCost;

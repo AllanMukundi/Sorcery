@@ -26,8 +26,8 @@ vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
 void Board::toGrave(int slot, int playerNum) {
     Player *player = (playerNum == 1) ? playerOne : playerTwo;
     Player *opponent = (player == playerOne) ? playerTwo : playerOne;
-    vector<shared_ptr<Minion>> cards = (playerNum == 1) ? getCards(1) : getCards(2);
-    player->getGrave().push_back(cards[slot]);
+    vector<shared_ptr<Minion>> &cards = (playerNum == 1) ? getCards(1) : getCards(2);
+    player->getGrave().push_back(cards[slot-1]);
     cards.erase(cards.begin() + slot - 1);
     player->setState(State::MinionLeave);
     player->notifyObservers();
@@ -39,7 +39,7 @@ void Board::toHand(int slot, int playerNum) {
     Player *player = (playerNum == 1) ? playerOne : playerTwo;
     Player *opponent = (player == playerOne) ? playerTwo : playerOne;
     vector<shared_ptr<Minion>> cards = (playerNum == 1) ? getCards(1) : getCards(2);
-    player->getHand().push_back(cards[slot]);
+    player->getHand().push_back(cards[slot-1]);
     cards.erase(cards.begin() + slot - 1);
     player->setState(State::MinionLeave);
     player->notifyObservers();
@@ -63,7 +63,7 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
     } else if (c->getType() == "Spell") { // TODO: add && to check if spell requires no target
       cout << "Playing spell: " << c->getName() << endl;
     } else if (c->getType() == "Ritual") {
-      cout << "Playing ritual: " << c->getName() << endl;
+        ritualP1 = dynamic_pointer_cast<Ritual>(c);
     }
 
   } else {
@@ -90,7 +90,7 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
     } else if (c->getType() == "Spell") { // TODO: add && to check if spell requires no target
       cout << "Playing spell: " << c->getName() << endl;
     } else if (c->getType() == "Ritual") {
-      cout << "Playing ritual: " << c->getName() << endl;
+        ritualP2 = dynamic_pointer_cast<Ritual>(c);
     }
   } else {
     // implement cards which target other things
@@ -100,10 +100,9 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
 }
 
 void Board::attackMinion(int currentPlayer, int minion, int otherMinion) {
-  int otherPlayer = (currentPlayer == 1 ? 2 : 1);
+  int otherPlayer = (currentPlayer == 1) ? 2 : 1;
   shared_ptr<Minion> m1 = getCards(currentPlayer).at(minion - 1);
   shared_ptr<Minion> m2 = getCards(otherPlayer).at(otherMinion - 1);
-
   m1->attackMinion(*m2);
   if (m1->getDefence() <= 0) toGrave(minion, currentPlayer);
   if (m2->getDefence() <= 0) toGrave(otherMinion, otherPlayer);
@@ -192,7 +191,7 @@ void Board::display() {
   }
 
   // Print Sorcery
-  for (int i = 0; i < CENTRE_GRAPHIC.size(); ++i) cout << CENTRE_GRAPHIC[i] << endl;
+  for (unsigned int i = 0; i < CENTRE_GRAPHIC.size(); ++i) cout << CENTRE_GRAPHIC[i] << endl;
 
   // Print third row
   for (int i = 0; i < cardHeight; ++i) {

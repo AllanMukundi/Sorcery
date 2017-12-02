@@ -45,10 +45,11 @@ void Minion::trigger(Board &b, Player &p) {
         }
     } else if (triggeredAbility == "Deal One") { // Deal 1dmg to opponent's played minion
         if (p.getState() == State::MinionEnterOpp) {
-            int oppNum = p.getNum() == 1 ? 2 : 1;
-            vector<shared_ptr<Minion>> minions = b.getCards(oppNum);
-            b.attackMinion(p.getNum(), 1, minions.size());
-            if (minions.at(minions.size()-1)->getDefence() <= 0) {
+            int oppNum = (p.getNum() == 1) ? 2 : 1;
+            vector<shared_ptr<Minion>> &minions = b.getCards(oppNum);
+            shared_ptr<Minion> target = minions[minions.size()-1];
+            target->changeDefence(-1);
+            if (target->getDefence() <= 0) {
                 b.toGrave(minions.size(), oppNum);
             }
         }
