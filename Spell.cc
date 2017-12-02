@@ -74,7 +74,7 @@ void Spell::effect(Board &b, Player &p, int target) {
         // Your ritual gains 3 recharges
         else if (name ==  "Recharge") {
             shared_ptr<Ritual> ritual = b.getRitual(p.getNum());
-                if (ritual != nullptr) {
+                if (ritual) {
                     ritual->setNC(3);
                     b.setRitual(ritual, p.getNum());
                 } else {

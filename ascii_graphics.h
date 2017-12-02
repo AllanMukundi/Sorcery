@@ -19,6 +19,7 @@ const std::string blue("\033[0;34m");   // spell
 const std::string white("\033[0;37m");    // player
 const std::string reset("\033[0m");     // 
 
+
 card_template_t display_minion_no_ability(std::string name,int cost,int attack,int defence);
 card_template_t display_minion_triggered_ability(std::string name,int cost,int attack,int defence,
                                                  std::string trigger_desc);
