@@ -19,8 +19,8 @@ class Board: public Observer{
     Board();
     void setPlayer(Player *p, int playerNum);
     void endTurn(Player *activePlayer, Player *nonActivePlayer);
-    void playCardP1(int slot, int player = 0, int otherSlot = 0); // play card at P1 slot
-    void playCardP2(int slot, int player = 0, int otherSlot = 0); // can be refactored later 
+    void playCardP1(int slot, int player = -1, int otherSlot = -1); // play card at P1 slot
+    void playCardP2(int slot, int player = -1, int otherSlot = -1); // can be refactored later 
     void toGrave(int slot, int playerNum);
     void toHand(int slot, int playerNum);
     void attackMinion(int currentPlayer, int minion, int otherMinion);
