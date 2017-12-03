@@ -1,3 +1,13 @@
 Allan
 Kendra
 hand
+discard 1
+discard 1
+discard 1
+hand
+discard 1
+draw
+draw
+draw
+discard 1
+hand
