@@ -4,11 +4,9 @@
 #include <vector>
 #include "Card.h"
 
-class Enchantment; class Player; class Board;
-
 class Minion: public Card {
     protected:
-        std::shared_ptr<Enchantment> enchantments;
+        <shared_ptr<Enchantment>> enchantments;
         int attack;
         int defence;
         std::string triggeredAbility;

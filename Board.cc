@@ -118,6 +118,7 @@ void Board::useActivatedAbility(int playerNum, int slot, int targetPlayer, int o
 void Board::playCardP1(int slot, int player, int otherSlot) {
   shared_ptr<Card> c = playerOne->getHand().at(slot - 1);              // slot - 1 becauase vector starts 0, slot starts 1
   playerOne->getHand().erase(playerOne->getHand().begin() + slot - 1); // must erase 
+<<<<<<< HEAD
     if (playerOne->getMana() - c->getCost() >= 0) {
       if (otherSlot == -1 && player == -1) {          // if we are playing a card which does not target other things
         if (c->getType() == "Minion") {
@@ -145,6 +146,34 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
               } else if (c->getName() == "Magic Fatigue") {
                    cardsP1[otherSlot-1] = make_shared<MagicFatigue>(MagicFatigue(target));
               }
+=======
+
+  if (otherSlot == -1 && player == -1) {          // if we are playing a card which does not target other things
+    if (c->getType() == "Minion") {
+      cout << "Playing minion: " << c->getName() << endl;
+      cardsP1.push_back(dynamic_pointer_cast<Minion>(c));
+      playerOne->setState(State::MinionEnter);
+      playerOne->notifyObservers();
+      playerTwo->setState(State::MinionEnterOpp);
+      playerTwo->notifyObservers();
+    } else if (c->getType() == "Spell") { // TODO: add && to check if spell requires no target
+      cout << "Playing spell: " << c->getName() << endl;
+    } else if (c->getType() == "Ritual") {
+      ritualP1 = dynamic_pointer_cast<Ritual>(c);
+    }
+
+  } else {
+      if (c->getType() == "Enchantment") {
+          shared_ptr<Minion> target = cardsP1[otherSlot-1];
+          if (c->getName() == "Giant Strength") {
+              cardsP1[otherSlot-1] = make_shared<GiantStrength>(GiantStrength(target));
+          } else if (c->getName() == "Enrage") {
+              cardsP1[otherSlot-1] = make_shared<Enrage>(Enrage(target));
+          } else if (c->getName() == "Silence") {
+               cardsP1[otherSlot-1] = make_shared<Silence>(Silence(target));
+          } else if (c->getName() == "Magic Fatigue") {
+               cardsP1[otherSlot-1] = make_shared<MagicFatigue>(MagicFatigue(target));
+>>>>>>> 0a4130ed2548f6a9c4557a8c96cc6e90bb96c6f7
           }
       }
       playerOne->changeMana(-1 * c->getCost());
