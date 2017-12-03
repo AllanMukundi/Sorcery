@@ -18,7 +18,7 @@ class Board: public Observer{
   public:
     Board();
     void setPlayer(Player *p, int playerNum);
-    std::vector<std::shared_ptr<Minion>> &getCards(int playerNum);
+    void endTurn(Player *activePlayer, Player *nonActivePlayer);
     void playCardP1(int slot, int player = 0, int otherSlot = 0); // play card at P1 slot
     void playCardP2(int slot, int player = 0, int otherSlot = 0); // can be refactored later 
     void toGrave(int slot, int playerNum);
@@ -28,6 +28,7 @@ class Board: public Observer{
     void inspect(int currentPlayer, int minion);
     void notify(Player &p) override;
     std::shared_ptr<Ritual> getRitual(int playerNum) const;
+    std::vector<std::shared_ptr<Minion>> &getCards(int playerNum);
     void setRitual(std::shared_ptr<Ritual> ritual, int playerNum);
     void display();
 };

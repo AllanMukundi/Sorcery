@@ -110,22 +110,6 @@ int main(int argc, char *argv[]) {
                 "      inspect minion -- View a minion's card and all enchantments on that minion.\n"
                 "      hand -- Describe all cards in your hand.\n"
                 "      board -- Describe all cards on the board.\n";
-        } else if (command == "end") {
-            // end of turn events occur for current player
-            activePlayer->setState(State::EndTurn);
-            activePlayer->notifyObservers();
-            nonActivePlayer->setState(State::EndTurnOpp);
-            nonActivePlayer->notifyObservers();
-            swap(activePlayer, nonActivePlayer);
-            // activePlayer.updateMana(activePlayer.mana++);
-            activePlayer->drawFromDeck(1);
-            activePlayer->setState(State::StartTurn);
-            activePlayer->notifyObservers();
-            nonActivePlayer->setState(State::StartTurnOpp);
-            nonActivePlayer->notifyObservers();
-            // beginning of turn events occur for new player
-        } else if (command == "quit") {
-            break;
         } else if (command == "attack") {
             if (init) {
                 getline(ifs, tmp);
@@ -217,6 +201,8 @@ int main(int argc, char *argv[]) {
             }
             // remove card from hand
             // activePlayer.removeCard(card);
+        } else if (command == "end")                { board.endTurn(activePlayer, nonActivePlayer); swap(activePlayer, nonActivePlayer);
+        } else if (command == "quit")               { break;
         } else if (command == "inspect")            { cin >> minion; board.inspect(currentPlayerNum, minion);
         } else if (command == "hand")               { activePlayer->showHand();
         } else if (command == "board")              { board.display();

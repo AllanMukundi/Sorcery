@@ -14,6 +14,22 @@ void Board::setPlayer(Player *p, int playerNum) {
   }
 }
 
+void Board::endTurn(Player *activePlayer, Player *nonActivePlayer) {
+  // end of turn events occur for current player
+  activePlayer->setState(State::EndTurn);
+  activePlayer->notifyObservers();
+  nonActivePlayer->setState(State::EndTurnOpp);
+  nonActivePlayer->notifyObservers();
+  //swap(activePlayer, nonActivePlayer);
+  // activePlayer.updateMana(activePlayer.mana++);
+  nonActivePlayer->drawFromDeck(1);
+  nonActivePlayer->setState(State::StartTurn);
+  nonActivePlayer->notifyObservers();
+  activePlayer->setState(State::StartTurnOpp);
+  activePlayer->notifyObservers();
+  // beginning of turn events occur for new player
+}
+
 vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
   if (playerNum == 1) {
       return cardsP1;
