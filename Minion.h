@@ -2,14 +2,13 @@
 #define MINION_H
 #include <string>
 #include <vector>
-#include <memory>
+#include "Board.h"
+#include "Player.h"
 #include "Card.h"
-
-class Enchantment; class Player; class Board;
 
 class Minion: public Card {
     protected:
-        std::shared_ptr<Enchantment> enchantments;
+        <shared_ptr<Enchantment>> enchantments;
         int attack;
         int defence;
         std::string triggeredAbility;
