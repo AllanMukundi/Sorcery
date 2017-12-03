@@ -1,6 +1,7 @@
 #ifndef DECK_H
 #define DECK_H
 #include "Card.h"
+#include <memory>
 
 class Deck {
   public:

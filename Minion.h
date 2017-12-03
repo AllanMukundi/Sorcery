@@ -17,8 +17,10 @@ class Minion: public Card {
       Minion(std::string name, int cost, std::string info, int attack, int defence, std::string triggeredAbility, int abilityCost);
       void changeAttack(const int amount);
       void changeDefence(const int amount);
+      void changeAction(const int amount);
       int getAttack() const;
       int getDefence() const;
+      int getAction() const;
       card_template_t display() override;
       void attackMinion(Minion &m);
       void attackPlayer(Player &p);

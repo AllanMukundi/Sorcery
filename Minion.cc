@@ -10,9 +10,11 @@ Minion::Minion(string name, int cost, string info, int attack, int defence, stri
 
 void Minion::changeAttack(int amount) { attack += amount; }
 void Minion::changeDefence(int amount) { defence += amount; }
+void Minion::changeAction(int amount) { action += amount; }
 
 int Minion::getAttack() const { return attack;}
 int Minion::getDefence() const { return defence;}
+int Minion::getAction() const { return action; }
 
 card_template_t Minion::display() {
     //if (triggered_ability) {
@@ -38,6 +40,11 @@ void Minion::notify(Board &b, Player &p, int target) {
 }
 
 void Minion::trigger(Board &b, Player &p) {
+    //not sure where minion activated abilites will be but one action
+    // point will be deducted from minion performing activated ability
+    // action--;
+    // a magic point will also be deducted
+    // p.changeMana(activated abiltiy cost);
     if (triggeredAbility == "Gain Both") { // Gain +1/+1 when a minion leaves play
         if (p.getState() == State::MinionLeave || p.getState() == State::MinionLeaveOpp) {
             changeAttack(1);
