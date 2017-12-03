@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "Board.h"
 #include "Card.h"
 #include "GiantStrength.h"
@@ -77,7 +78,8 @@ void Board::useActivatedAbility(int playerNum, int slot, int targetPlayer, int o
       if (otherSlot == -1 && targetPlayer == -1) {
         if (m->getAA() == "Summon") {
           int summonAmount = m->getSummonAmount();
-          for (int i = 0; i < summonAmount; ++i) {
+          int slotsAvailable = 5-(int)(cards.size());
+          for (int i = 0; i < min(summonAmount, slotsAvailable); ++i) {
             shared_ptr<Minion> tmp = dynamic_pointer_cast<Minion>(Card::load(m->getSummonName()));
             cards.push_back(tmp); // TODO: need to setup state stuff for observer pattern
           }
@@ -100,6 +102,7 @@ void Board::useActivatedAbility(int playerNum, int slot, int targetPlayer, int o
 void Board::playCardP1(int slot, int player, int otherSlot) {
   shared_ptr<Card> c = playerOne->getHand().at(slot - 1);              // slot - 1 becauase vector starts 0, slot starts 1
   playerOne->getHand().erase(playerOne->getHand().begin() + slot - 1); // must erase 
+  vector<shared_ptr<Minion>> &cards = (player == 1) ? cardsP1: cardsP2;
     if (playerOne->getMana() - c->getCost() >= 0) {
       if (otherSlot == -1 && player == -1) {          // if we are playing a card which does not target other things
         if (c->getType() == "Minion") {
@@ -117,17 +120,17 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
 
       } else {
           if (c->getType() == "Enchantment") {
-              shared_ptr<Minion> target = cardsP1[otherSlot-1];
+              shared_ptr<Minion> target = cards[otherSlot-1];
               if (c->getName() == "Giant Strength") {
-                  cardsP1[otherSlot-1] = make_shared<GiantStrength>(GiantStrength(target));
+                  cards[otherSlot-1] = make_shared<GiantStrength>(GiantStrength(target));
               } else if (c->getName() == "Enrage") {
-                  cardsP1[otherSlot-1] = make_shared<Enrage>(Enrage(target));
+                  cards[otherSlot-1] = make_shared<Enrage>(Enrage(target));
               } else if (c->getName() == "Silence") {
-                   cardsP1[otherSlot-1] = make_shared<Silence>(Silence(target));
+                   cards[otherSlot-1] = make_shared<Silence>(Silence(target));
               } else if (c->getName() == "Magic Fatigue") {
-                   cardsP1[otherSlot-1] = make_shared<MagicFatigue>(MagicFatigue(target));
+                   cards[otherSlot-1] = make_shared<MagicFatigue>(MagicFatigue(target));
               } else if (c->getName() == "Haste") {
-                   cardsP1[otherSlot-1] = make_shared<Haste>(Haste(target));
+                   cards[otherSlot-1] = make_shared<Haste>(Haste(target));
               }
           }
       }
@@ -141,6 +144,7 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
 void Board::playCardP2(int slot, int player, int otherSlot) {
   shared_ptr<Card> c = playerTwo->getHand().at(slot - 1); // slot - 1 becauase vector starts 0, slot starts 1
   playerTwo->getHand().erase(playerTwo->getHand().begin() + slot - 1); // must erase because we used "move" previous line
+  vector<shared_ptr<Minion>> &cards = (player == 1) ? cardsP1: cardsP2;
   if (playerTwo->getMana() - c->getCost() >= 0) {
       if (otherSlot == -1 && player == -1) {          // if we are playing a card which does not target other things
         if (c->getType() == "Minion") {
@@ -157,17 +161,17 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
         }
       } else {
           if (c->getType() == "Enchantment") {
-              shared_ptr<Minion> target = cardsP2[otherSlot-1];
+              shared_ptr<Minion> target = cards[otherSlot-1];
               if (c->getName() == "Giant Strength") {
-                  cardsP2[otherSlot-1] = make_shared<GiantStrength>(GiantStrength(target));
+                  cards[otherSlot-1] = make_shared<GiantStrength>(GiantStrength(target));
               } else if (c->getName() == "Enrage") {
-                  cardsP2[otherSlot-1] = make_shared<Enrage>(Enrage(target));
+                  cards[otherSlot-1] = make_shared<Enrage>(Enrage(target));
               } else if (c->getName() == "Silence") {
-                   cardsP2[otherSlot-1] = make_shared<Silence>(Silence(target));
+                   cards[otherSlot-1] = make_shared<Silence>(Silence(target));
               } else if (c->getName() == "Magic Fatigue") {
-                   cardsP2[otherSlot-1] = make_shared<MagicFatigue>(MagicFatigue(target));
+                   cards[otherSlot-1] = make_shared<MagicFatigue>(MagicFatigue(target));
               } else if (c->getName() == "Haste") {
-                   cardsP2[otherSlot-1] = make_shared<Haste>(Haste(target));
+                   cards[otherSlot-1] = make_shared<Haste>(Haste(target));
               }
           }
       }
