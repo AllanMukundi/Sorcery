@@ -1,6 +1,7 @@
 #ifndef DECORATOR_H
 #define DECORATOR_H
 #include "Minion.h"
+#include "Player.h"
 
 class Decorator: public Minion {
     protected:
@@ -27,7 +28,6 @@ class Decorator: public Minion {
         void attackMinion(Minion &m) override;
         void attackPlayer(Player &p) override;
         void notify(Board &b, Player &p, int target = -1) override;
-        virtual ~Decorator()=0;
 };
 
 #endif
