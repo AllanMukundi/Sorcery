@@ -152,6 +152,11 @@ int main(int argc, char *argv[]) {
             if (count == 3) {
                 if (targetCard == "r") {
                     cout << "Playing card: " << card << " on player " << targetPlayer << "'s ritual" << endl;
+                    if (currentPlayerNum == 1) {
+                        board.playCardP1(card, targetPlayer, 0);
+                    } else {
+                        board.playCardP2(card, targetPlayer, 0);
+                    }
                 } else {
                     cout << "Playing card: " << card << " on player " << targetPlayer << "'s minion: " << stoi(targetCard) << endl;
                     if (currentPlayerNum == 1) { // if active player is P1

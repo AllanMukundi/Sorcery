@@ -17,7 +17,6 @@ class Spell: public Card {
     //      and 0 is the ritual owned by player p
     void notify (Board &b, Player &p, int target = -1) override;
     void useSpell(Board &b, Player &p, int target = -1);
-    void effect(Board &b, Player &p, int target = -1);
     card_template_t display() override;
 };
 
