@@ -30,6 +30,7 @@ class Minion: public Card {
         virtual void changeDefence(const int amount)=0;
         virtual void changeAC(const int amount)=0; 
         virtual void changeAction(const int amount)=0;
+        virtual void setAction(const int amount)=0;
         virtual int getAttack() const=0;
         virtual int getDefence() const=0;
         virtual int getAC() const=0;

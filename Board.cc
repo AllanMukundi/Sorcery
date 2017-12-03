@@ -33,25 +33,6 @@ void Board::endTurn(Player *activePlayer, Player *nonActivePlayer) {
   nonActivePlayer->notifyObservers();
   activePlayer->setState(State::StartTurnOpp);
   activePlayer->notifyObservers();
-  // beginning of turn events occur for new player
-  // At the start of every turn, every minion owned by the player
-  //    whose turn it is is restored to 1 action
-  int playerNum = nonActivePlayer->getNum();
-  vector<shared_ptr<Minion>> minions = getCards(playerNum);
-  for (unsigned int i = 0; i < minions.size(); i++) {
-    shared_ptr<Minion> currentMin = minions.at(i);
-    int actions = currentMin->getAction();
-
-    if (actions == 0) {
-       currentMin->changeAction(1);
-    } else if (actions >= 2) {
-        // bring back down to 1
-        // this occurs when Haste is used
-        // "Extra actions granted by haste do not last between turns" 
-        currentMin->changeAction(- (actions - 1));
-    }
-    // Note that a minion which already had 1 action remains at 1 action
-  }
 }
 
 vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
@@ -216,7 +197,7 @@ void Board::attackPlayer(int currentPlayer, int minion) {
   shared_ptr<Minion> attackingMin = getCards(currentPlayer).at(minion - 1);
   if (attackingMin->getAction() > 0) {
     attackingMin->attackPlayer(*otherPlayer);
-    // decrease by one aciton point
+    // decrease by one action point
     attackingMin->changeAction(-1);
   } else {
     cout << "Not enough action points to attack." << endl;
