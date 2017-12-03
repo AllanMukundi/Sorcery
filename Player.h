@@ -5,8 +5,9 @@
 #include "Card.h"
 #include "Deck.h"
 #include "Board.h"
-#include "Minion.h"
 #include "Subject.h"
+
+class Minion;
 
 class Player: public Subject {
   std::string name;
@@ -14,14 +15,14 @@ class Player: public Subject {
   int mana = 3;
   int playerNum;
   State state;
-  Deck deck = Deck();
+  Deck deck;
   std::vector<std::shared_ptr<Minion>> grave;
   std::vector<std::shared_ptr<Card>> hand;
 
   public:
-    Player(std::string name, int side);
-    void shuffleDeck(std::vector<Card *> deck);
-    void drawFromDeck();
+    Player(std::string name, int side, std::string deckfile = "default.deck");
+    void shuffleDeck();
+    void drawFromDeck(int num);
     void changeHealth(const int amount);
     void changeMana(const int amount);
     void setState(const State newState);
@@ -30,7 +31,7 @@ class Player: public Subject {
     int getHealth() const;
     void showHand();
     void notifyObservers() override;
-    void removeFromHand(Card *cardToRemove); 
+    void removeFromHand(int slot); 
     int getMana() const;
     std::vector<std::shared_ptr<Minion>> &getGrave();
     std::vector<std::shared_ptr<Card>> &getHand();

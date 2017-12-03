@@ -1,16 +1,15 @@
 #ifndef DECK_H
 #define DECK_H
-#include <string>
-#include <vector>
+
 #include <memory>
-#include "Card.h"
+#include <vector>
+
+class Card;
 
 class Deck {
   public:
     std::vector<std::shared_ptr<Card>> cards;
-
-    // when true, creates a deck containing every possible card
-    Deck(bool isFullDeck = false); 
+    Deck(std::string deckfile = "default.deck"); 
     void shuffle();
 };
 

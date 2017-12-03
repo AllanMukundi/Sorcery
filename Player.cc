@@ -8,37 +8,34 @@
 
 using namespace std;
 
-Player::Player(string name, int playerNum) : name {name}, playerNum {playerNum} {
-    state = State::NoState;
-    //Create initial Deck - note this is all cards and not players deck
-    Deck allCards = Deck(true);
-    // Randomly choose 20 cards from all cards vector to go in deck
-    // cards already shuffled in Deck constructor
-    // put cards in deck
-    for (int i = 0; i < 20; ++i) {
-        // point to instances of classes that inherit from Card but are not abstract
-        shared_ptr<Card> cardToMove = allCards.cards.back();
-        allCards.cards.pop_back();
-        if (i < 15) {
-            deck.cards.push_back(cardToMove);
-       } else {
-        // put last five cards in hand (all random)
-            hand.push_back(cardToMove);
-       }
-    }
-}    
+Player::Player(string name, int playerNum, string deckfile) : name {name}, 
+  playerNum {playerNum}, state{State::NoState}, deck{deckfile} {}    
    
-void Player::drawFromDeck() {
+void Player::drawFromDeck(int num) {
     // check first that hand is not full
     if (hand.size() == 5) {
         cout << "No cards drawn from deck as hand is full." << endl;
         return;
     } 
-    cout << "Card is drawn from deck." << endl;
-    
-    shared_ptr<Card> drawnCard = deck.cards.back();
-    deck.cards.pop_back();     // remove card from deck
-    hand.push_back(drawnCard); // put card in hand
+
+    // ensure there are cards in deck
+    if (deck.cards.size() == 0) {
+        cout << "No cards drawn from deck as deck is empty." << endl;
+        return;
+    }
+
+    for (int i = 0; i < num; ++i) {
+      shared_ptr<Card> drawnCard = deck.cards.front();
+      deck.cards.erase(deck.cards.begin());     // remove card from deck
+      hand.push_back(drawnCard);                // put card in hand 
+    }
+
+    if (num == 1) {
+        cout << "Card is drawn from deck." << endl;
+    } else {
+        // used at beginning 
+        cout << num << " cards drawn from deck for " << name << "." << endl;
+    }
 }
 
 void Player::showHand() { 
@@ -70,21 +67,15 @@ void Player::changeMana(const int amount)   { mana += amount; }
 // Setters
 void Player::setState(const State newState) { state = newState; }
 
+
+void Player::removeFromHand(int slot) { hand.erase(hand.begin() + slot - 1); }
+void Player::shuffleDeck() { deck.shuffle(); }
+card_template_t Player::display() { return display_player_card(playerNum, name, health, mana); }
+
+
 void Player::notifyObservers() {
     for(unsigned int i = 0; i < observers.size(); ++i) {
         observers[i]->notify(*this);
     }
-}
-
-
-void Player::removeFromHand(Card *card) {
-    // Michelle TODO: Implement 
-    return;
-}
-
-
-card_template_t Player::display() {
-    card_template_t card = display_player_card(playerNum, name, health, mana);
-    return card;
 }
 

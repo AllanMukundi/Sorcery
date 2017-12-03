@@ -3,6 +3,7 @@
 #include <string>
 #include "Card.h"
 #include "State.h"
+#include "Minion.h"
 
 class Player; class Board;
 
@@ -17,6 +18,7 @@ class Ritual: public Card {
       void effect(Board &b, Player &p, int target = -1);
       int getNC() const;
       int getAC() const;
+      void changeNC(const int amount);
       void setNC(const int newNC);
       void setAC(const int newAC);
       card_template_t display() override;

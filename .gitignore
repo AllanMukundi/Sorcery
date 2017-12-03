@@ -1,6 +1,7 @@
 # Things we don't want to appear in git repository
-
+sorcery
 *.d
 *.o
 *.swp
 *.out
+.nfs*
