@@ -60,7 +60,6 @@ int main(int argc, char *argv[]) {
 
     // Create players - this also shuffles and sets up decks and hands
 
-    GraphicBoard gb(700);
     Player playerOne(playerOneName, 1, deck1);
     Player playerTwo(playerTwoName, 2, deck2);
     if (!testing) {
@@ -76,6 +75,7 @@ int main(int argc, char *argv[]) {
     board.setPlayer(&playerTwo, 2);
     playerOne.addObserver(&board);
     playerTwo.addObserver(&board);
+    GraphicBoard gb(800);
 
     activePlayer->changeMana(1);
     string command;
