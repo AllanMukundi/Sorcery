@@ -113,6 +113,8 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
           playerTwo->setState(State::MinionEnterOpp);
           playerTwo->notifyObservers();
         } else if (c->getType() == "Spell") {
+            Player &p = (player == 1) ? *playerOne : *playerTwo;
+            dynamic_pointer_cast<Spell>(c)->useSpell(*this, p, otherSlot);
           cout << "Playing spell: " << c->getName() << endl;
         } else if (c->getType() == "Ritual") {
           ritualP1 = dynamic_pointer_cast<Ritual>(c);
@@ -132,6 +134,9 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
               } else if (c->getName() == "Haste") {
                    cards[otherSlot-1] = make_shared<Haste>(Haste(target));
               }
+          } else if (c->getType() == "Spell") {
+            Player &p = (player == 1) ? *playerOne : *playerTwo;
+            dynamic_pointer_cast<Spell>(c)->useSpell(*this, p, otherSlot);
           }
       }
       playerOne->changeMana(-1 * c->getCost());
@@ -154,8 +159,9 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
           playerTwo->notifyObservers();
           playerOne->setState(State::MinionEnterOpp);
           playerOne->notifyObservers();
-        } else if (c->getType() == "Spell") { // TODO: add && to check if spell requires no target
-          cout << "Playing spell: " << c->getName() << endl;
+        } else if (c->getType() == "Spell") {
+            Player &p = (player == 1) ? *playerOne : *playerTwo;
+            dynamic_pointer_cast<Spell>(c)->useSpell(*this, p, otherSlot);
         } else if (c->getType() == "Ritual") {
             ritualP2 = dynamic_pointer_cast<Ritual>(c);
         }
@@ -172,6 +178,9 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
                    cards[otherSlot-1] = make_shared<MagicFatigue>(MagicFatigue(target));
               } else if (c->getName() == "Haste") {
                    cards[otherSlot-1] = make_shared<Haste>(Haste(target));
+              } else if (c->getType() == "Spell") {
+                Player &p = (player == 1) ? *playerOne : *playerTwo;
+                dynamic_pointer_cast<Spell>(c)->useSpell(*this, p, otherSlot);
               }
           }
       }

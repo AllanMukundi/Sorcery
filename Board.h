@@ -6,6 +6,7 @@
 #include "Observer.h"
 #include "Player.h"
 #include "Ritual.h"
+#include "Spell.h"
 #include "Minion.h"
 #include "Decorator.h"
 

@@ -13,7 +13,7 @@ void Spell::notify(Board &b, Player &p, int target) {
 
 void Spell::useSpell(Board &b, Player &p, int target) {
     // ensure player can afford to play card
-    if (p.getMana() >= cost) {
+    if (p.getMana() - cost >= 0) {
         effect(b, p, target);
         p.changeMana(-cost);
     } else {
@@ -57,13 +57,19 @@ void Spell::effect(Board &b, Player &p, int target) {
         }
         // Destroy the top enchantment on target minion
         else if (name == "Disenchant") {
-            // Michelle TODO: After enchantments are implemented
+            vector<shared_ptr<Minion>> &cards = b.getCards(p.getNum());
+            shared_ptr<Decorator> minion = dynamic_pointer_cast<Decorator>(cards[target-1]);
+            if (minion) {
+                cards[target-1] = minion->getMinion();
+            } else {
+                cout << "no enchantment on me sir!" << endl;
+            }
         }
         // Resurrect the top minion in your graveyard and set its
         //    defense to 1
         else if (name ==  "Raise Dead") {
-            vector<shared_ptr<Minion>> grave = p.getGrave();
-            vector<shared_ptr<Card>> hand = p.getHand();
+            vector<shared_ptr<Minion>> &grave = p.getGrave();
+            vector<shared_ptr<Card>> &hand = p.getHand();
             if (grave.size() > 0) {
                 // most recent minion is at back of grave
                 shared_ptr<Minion> minionToRes = grave.back();
@@ -89,7 +95,7 @@ void Spell::effect(Board &b, Player &p, int target) {
         //Return target's minion to its owner's hand
         else if (name ==  "Unsummon") {
             vector<shared_ptr<Card>> &hand = p.getHand();            
-            vector<shared_ptr<Minion>> minions = b.getCards(playerNum);
+            vector<shared_ptr<Minion>> &minions = b.getCards(playerNum);
             if ((int)minions.size() >= target) {
                 // - 1 to account for vector starting at 0
                 shared_ptr<Minion> targetMin = minions.at(target - 1);
