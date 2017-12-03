@@ -1,7 +1,10 @@
 #ifndef DECK_H
 #define DECK_H
-#include "Card.h"
+
 #include <memory>
+#include <vector>
+
+class Card;
 
 class Deck {
   public:
