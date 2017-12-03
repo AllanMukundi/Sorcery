@@ -26,8 +26,8 @@ void Board::endTurn(Player *activePlayer, Player *nonActivePlayer) {
   nonActivePlayer->notifyObservers();
   //swap(activePlayer, nonActivePlayer);
   // activePlayer.updateMana(activePlayer.mana++);
-  nonActivePlayer->drawFromDeck(1);
   nonActivePlayer->changeMana(1);
+  nonActivePlayer->drawFromDeck(1);
   nonActivePlayer->setState(State::StartTurn);
   nonActivePlayer->notifyObservers();
   activePlayer->setState(State::StartTurnOpp);
@@ -88,23 +88,29 @@ void Board::toHand(int slot, int playerNum) {
 
 
 void Board::useActivatedAbility(int playerNum, int slot, int targetPlayer, int otherSlot) {
+  Player *player = (playerNum == 1) ? playerOne : playerTwo;
   vector<shared_ptr<Minion>> &cards = (playerNum == 1) ? cardsP1: cardsP2;
   shared_ptr<Minion> m = cards.at(slot - 1); 
-
-  if (otherSlot == -1 && targetPlayer == -1) {
-    if (m->getAA() == "Summon") {
-      int summonAmount = m->getSummonAmount();
-      for (int i = 0; i < summonAmount; ++i) {
-        shared_ptr<Minion> tmp = dynamic_pointer_cast<Minion>(Card::load(m->getSummonName()));
-        cards.push_back(tmp); // TODO: need to setup state stuff for observer pattern
+  if (m->getAction() > 0 && player->getMana() > m->getAC()) {
+      if (otherSlot == -1 && targetPlayer == -1) {
+        if (m->getAA() == "Summon") {
+          int summonAmount = m->getSummonAmount();
+          for (int i = 0; i < summonAmount; ++i) {
+            shared_ptr<Minion> tmp = dynamic_pointer_cast<Minion>(Card::load(m->getSummonName()));
+            cards.push_back(tmp); // TODO: need to setup state stuff for observer pattern
+          }
+        }
+      } else {
+        if (m->getAA() == "Damage") {
+          vector<shared_ptr<Minion>> &targetCards = (targetPlayer == 1) ? cardsP1: cardsP2;
+          int dmg = m->getAADamage();
+          targetCards.at(otherSlot - 1)->changeDefence(-dmg);
+        }
       }
-    }
+      m->changeAction(-1);
+      player->changeMana(-1 * m->getAC());
   } else {
-    if (m->getAA() == "Damage") {
-      vector<shared_ptr<Minion>> &targetCards = (targetPlayer == 1) ? cardsP1: cardsP2;
-      int dmg = m->getAADamage();
-      targetCards.at(otherSlot - 1)->changeDefence(-dmg);
-    }
+      cout << "Not enough action points/mana to use an activated ability" << endl;
   }
 }
 
@@ -141,7 +147,7 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
           }
       }
   }
-
+  playerOne->changeMana(-1 * c->getCost());
 }
     
 
@@ -177,6 +183,7 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
           }
       }
   }
+  playerTwo->changeMana(-1 * c->getCost());;;;
 }
 
 void Board::attackMinion(int currentPlayer, int minion, int otherMinion) {

@@ -70,6 +70,7 @@ card_template_t BasicMinion::display() {
     if (!triggeredAbility.empty()) {
       return display_minion_triggered_ability(name, cost, attack, defence, info);
     } else if(!activatedAbility.empty()) {
+        cout << abilityCost << endl;
       return display_minion_activated_ability(name, cost, attack, defence, abilityCost, info);
     } else {
       return display_minion_no_ability(name, cost, attack, defence);
