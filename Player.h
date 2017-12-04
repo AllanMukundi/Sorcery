@@ -12,7 +12,7 @@ class Minion;
 class Player: public Subject {
   std::string name;
   int health = 20;
-  int mana = 30;
+  int mana = 3;
   int playerNum;
   State state;
   Deck deck;
