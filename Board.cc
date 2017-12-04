@@ -21,16 +21,18 @@ void Board::setPlayer(Player *p, int playerNum) {
 }
 
 void Board::endTurn(Player *activePlayer, Player *nonActivePlayer) {
-  activePlayer->setState(State::EndTurn);
+  activePlayer->setActive(false);
+  nonActivePlayer->setActive(true);
+  //activePlayer->setState(State::EndTurn);
+  //activePlayer->notifyObservers();
+  //nonActivePlayer->setState(State::EndTurnOpp);
+  //nonActivePlayer->notifyObservers();
+  activePlayer->setState(State::StartTurnOpp);
   activePlayer->notifyObservers();
-  nonActivePlayer->setState(State::EndTurnOpp);
-  nonActivePlayer->notifyObservers();
   nonActivePlayer->changeMana(1);
   nonActivePlayer->drawFromDeck(1);
   nonActivePlayer->setState(State::StartTurn);
   nonActivePlayer->notifyObservers();
-  activePlayer->setState(State::StartTurnOpp);
-  activePlayer->notifyObservers();
 }
 
 vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {

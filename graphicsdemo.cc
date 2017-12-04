@@ -20,7 +20,7 @@ int main() {
   w2.drawBigString(50, 100, "ABCD", Xwindow::Black);
 
 
-  //w.showAvailableFonts();
+  w.showAvailableFonts();
 
   char c;
   cin >> c;
