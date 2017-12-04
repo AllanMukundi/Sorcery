@@ -10,7 +10,7 @@
 
 using namespace std;
 
-Board::Board() {}
+Board::Board(bool testing): testing {testing} {}
 
 void Board::setPlayer(Player *p, int playerNum) {
   if (playerNum == 1) {
@@ -62,7 +62,7 @@ void Board::toGrave(int slot, int playerNum) {
 void Board::toHand(int slot, int playerNum) {
     Player *player = (playerNum == 1) ? playerOne : playerTwo;
     Player *opponent = (player == playerOne) ? playerTwo : playerOne;
-    vector<shared_ptr<Minion>> cards = (playerNum == 1) ? getCards(1) : getCards(2);
+    vector<shared_ptr<Minion>> &cards = (playerNum == 1) ? getCards(1) : getCards(2);
     shared_ptr<Minion> m = cards[slot-1];
     cards.erase(cards.begin() + slot - 1);
     while (m->getEnchantments().size() > 0) {
@@ -81,7 +81,7 @@ void Board::useActivatedAbility(int playerNum, int slot, int targetPlayer, int o
   Player *player = (playerNum == 1) ? playerOne : playerTwo;
   vector<shared_ptr<Minion>> &cards = (playerNum == 1) ? cardsP1: cardsP2;
   shared_ptr<Minion> m = cards.at(slot - 1); 
-  if (m->getAction() > 0 && (player->getMana() - m->getAC()) >= 0 ) {
+  if (m->getAction() > 0 && ((player->getMana() - m->getAC() >= 0) || testing)) {
       if (otherSlot == -1 && targetPlayer == -1) {
         if (m->getAA() == "Summon") {
           int summonAmount = m->getSummonAmount();
@@ -100,6 +100,7 @@ void Board::useActivatedAbility(int playerNum, int slot, int targetPlayer, int o
       }
       m->changeAction(-1);
       player->changeMana(-1 * m->getAC());
+      player->setMana(max(player->getMana(), 0));
   } else {
       cout << "Not enough action points/mana to use an activated ability" << endl;
   }
@@ -110,7 +111,7 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
   shared_ptr<Card> c = playerOne->getHand().at(slot - 1);              // slot - 1 becauase vector starts 0, slot starts 1
   vector<shared_ptr<Minion>> &cards = (player == 1) ? cardsP1: cardsP2;
   try {
-        if (playerOne->getMana() - c->getCost() >= 0) {
+        if ((playerOne->getMana() - c->getCost() >= 0) || testing) {
           if (otherSlot == -1 && player == -1) {          // if we are playing a card which does not target other things
             if (c->getType() == "Minion") {
               cout << "Playing minion: " << c->getName() << endl;
@@ -147,6 +148,7 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
               }
           }
           playerOne->changeMana(-1 * c->getCost());
+          playerOne->setMana(max(playerOne->getMana(), 0));
           playerOne->getHand().erase(playerOne->getHand().begin() + slot - 1); // must erase 
         } else {
             cout << "Not enough mana" << endl;
@@ -161,7 +163,7 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
   shared_ptr<Card> c = playerTwo->getHand().at(slot - 1); // slot - 1 becauase vector starts 0, slot starts 1
   vector<shared_ptr<Minion>> &cards = (player == 1) ? cardsP1: cardsP2;
   try {
-      if (playerTwo->getMana() - c->getCost() >= 0) {
+      if ((playerTwo->getMana() - c->getCost() >= 0) || testing) {
           if (otherSlot == -1 && player == -1) {          // if we are playing a card which does not target other things
             if (c->getType() == "Minion") {
               cout << "Playing minion: " << c->getName() << endl;
@@ -197,6 +199,7 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
               }
           }
           playerTwo->changeMana(-1 * c->getCost());
+          playerTwo->setMana(max(playerTwo->getMana(), 0));
           playerTwo->getHand().erase(playerTwo->getHand().begin() + slot - 1); // must erase because we used "move" previous line
       } else {
           cout << "Not enough mana" << endl;
@@ -233,11 +236,35 @@ void Board::attackPlayer(int currentPlayer, int minion) {
   }
 }
 
+int min(int a, int b) { return a < b ? a : b; }
+
 void Board::inspect(int currentPlayer, int slot) {
-    shared_ptr<Minion> c = getCards(currentPlayer).at(slot - 1);
-    for (int i = 0; i < cardHeight; ++i) {
-        cout << green << c->display()[i] << reset << endl; // print card first
+  shared_ptr<Minion> m = getCards(currentPlayer).at(slot - 1);
+  vector<shared_ptr<Enchantment>> e = m->getEnchantments();
+
+  // print minion
+  for (int i = 0; i < cardHeight; ++i) {
+    cout << green << m->display()[i] << reset << endl;
+  }
+
+  // print enchantments
+  int numRows = (e.size()%5 == 0) ? e.size()/5 : e.size()/5 + 1;
+  int col = 0;
+  for (int i = 0; i < numRows; ++i) {                         // print for each row
+    for (int j = 0; j < cardHeight; ++j) {                    // for card height
+      int ctr = 0;
+      for (int k = col; k < min(5*(i+1), e.size()); ++k) {    // print enchantmnets
+        cout << cyan << e.at(k)->display()[j] << reset;
+        if (ctr == 4 || e.back() == e.at(k)) { 
+          cout << endl;
+          ctr = 0;
+          continue;
+        }
+        ctr++;
+      }
     }
+    col = 5*(i+1);
+  }
 }
 
 void Board::notify(Player &p) {
