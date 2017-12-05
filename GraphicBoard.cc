@@ -25,6 +25,18 @@ GraphicBoard::GraphicBoard(int winSize):winSize{winSize}, xw{winSize, winSize}{
     xw.drawBigString(mid-95, bth + ch*2 + 20*2 + 45,"Sorcery", Xwindow::Black);
 }
 
+void drawDescription(int x, int y, Xwindow &xw, string s, int width) {
+    int charWidth = 3; // a guess
+    int charsPerLine = (width - x) / charWidth;
+    int start = 0;
+    int height = y;
+    while (start < s.length()) {
+        xw.drawString(x, height, s.substr(start, charsPerLine), Xwindow::Black);
+        start += charsPerLine;
+        height += 15;
+    }
+}
+
 Xwindow::Colour col(string type) {
   if (type == "Minion") return Xwindow::Green;
   if (type == "Enchantment") return Xwindow::Cyan;
