@@ -173,10 +173,10 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
             if (c->getType() == "Minion") {
               cout << "Playing minion: " << c->getName() << endl;
               cardsP2.push_back(dynamic_pointer_cast<Minion>(c));
-              playerTwo->setState(State::MinionEnter);
-              playerTwo->notifyObservers();
-              playerOne->setState(State::MinionEnterOpp);
-              playerOne->notifyObservers();
+              //playerTwo->setState(State::MinionEnter);
+              //playerTwo->notifyObservers();
+              //playerOne->setState(State::MinionEnterOpp);
+              //playerOne->notifyObservers();
             } else if (c->getType() == "Spell") {
                 dynamic_pointer_cast<Spell>(c)->useSpell(*this, *playerTwo, otherSlot);
             } else if (c->getType() == "Ritual") {
@@ -206,6 +206,9 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
           playerTwo->changeMana(-1 * c->getCost());
           playerTwo->setMana(max(playerTwo->getMana(), 0));
           playerTwo->getHand().erase(playerTwo->getHand().begin() + slot - 1); // must erase because we used "move" previous line
+          playerOne->notifyObservers();
+          //playerTwo->setState(State::MinionEnterOpp);
+          playerTwo->notifyObservers();
       } else {
           cout << "Not enough mana" << endl;
       }
@@ -227,6 +230,8 @@ void Board::attackMinion(int currentPlayer, int minion, int otherMinion) {
   } else {
     cout << "Not enough action points to attack." << endl;
   }
+  if (currentPlayer == 1) playerOne->notifyObservers();
+  if (currentPlayer == 2) playerTwo->notifyObservers();
 }
 
 void Board::attackPlayer(int currentPlayer, int minion) {
@@ -239,6 +244,8 @@ void Board::attackPlayer(int currentPlayer, int minion) {
   } else {
     cout << "Not enough action points to attack." << endl;
   }
+  if (currentPlayer == 1) playerOne->notifyObservers();
+  if (currentPlayer == 2) playerTwo->notifyObservers();
 }
 
 int min(int a, int b) { return a < b ? a : b; }
