@@ -15,7 +15,7 @@ class GraphicBoard: public Observer {
   Xwindow xw;
   Board *board;
   public:
-    GraphicBoard(int winSize);
+    GraphicBoard(int winSize=800);
     void notify(Player &p) override;
     void setBoard(Board *b);
 };

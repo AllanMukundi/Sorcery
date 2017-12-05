@@ -151,10 +151,7 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
           }
           playerOne->changeMana(-1 * c->getCost());
           playerOne->setMana(max(playerOne->getMana(), 0));
-          playerOne->getHand().erase(playerOne->getHand().begin() + slot - 1); // must erase 
-          playerOne->notifyObservers();
-          //playerTwo->setState(State::MinionEnterOpp);
-          playerTwo->notifyObservers();
+          playerOne->removeFromHand(slot); 
         } else {
             cout << "Not enough mana" << endl;
         }
@@ -205,10 +202,7 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
           }
           playerTwo->changeMana(-1 * c->getCost());
           playerTwo->setMana(max(playerTwo->getMana(), 0));
-          playerTwo->getHand().erase(playerTwo->getHand().begin() + slot - 1); // must erase because we used "move" previous line
-          playerOne->notifyObservers();
-          //playerTwo->setState(State::MinionEnterOpp);
-          playerTwo->notifyObservers();
+          playerTwo->removeFromHand(slot); 
       } else {
           cout << "Not enough mana" << endl;
       }

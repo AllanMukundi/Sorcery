@@ -73,17 +73,20 @@ int main(int argc, char *argv[]) {
     board.setPlayer(&playerOne, 1);
     board.setPlayer(&playerTwo, 2);
 
-    GraphicBoard gb(800);
-    gb.setBoard(&board);
+    activePlayer->changeMana(1);
     playerOne.addObserver(&board);
     playerTwo.addObserver(&board);
-    playerOne.addObserver(&gb);
-    playerTwo.addObserver(&gb);
+
+    if (graphics) {
+      GraphicBoard gb(800);
+      gb.setBoard(&board);
+      playerOne.addObserver(&gb);
+      playerTwo.addObserver(&gb);
+    }
 
     playerOne.drawFromDeck(5); // draw 5 cards
     playerTwo.drawFromDeck(5); // draw 5 cards
 
-    activePlayer->changeMana(1);
     string command;
 
     while(true) {

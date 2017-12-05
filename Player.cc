@@ -64,15 +64,15 @@ vector<shared_ptr<Minion>> &Player::getGrave() { return grave; }
 vector<shared_ptr<Card>>   &Player::getHand()  { return hand; }
 
 // Changers
-void Player::changeHealth(const int amount) { health += amount; }
-void Player::changeMana(const int amount)   { mana += amount; }
+void Player::changeHealth(const int amount) { health += amount; notifyObservers(); }
+void Player::changeMana(const int amount)   { mana += amount; notifyObservers(); }
 
 // Setters
 void Player::setState(const State newState) { state = newState; }
 void Player::setActive(const bool a) { active = a; }
 
 
-void Player::removeFromHand(int slot) { hand.erase(hand.begin() + slot - 1); }
+void Player::removeFromHand(int slot) { hand.erase(hand.begin() + slot - 1); notifyObservers(); }
 void Player::shuffleDeck() { deck.shuffle(); }
 card_template_t Player::display() { return display_player_card(playerNum, name, health, mana); }
 
