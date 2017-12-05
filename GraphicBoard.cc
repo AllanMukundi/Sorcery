@@ -26,7 +26,7 @@ void drawPlayer(int x, int y, Xwindow &xw, Player *p) {
     int m = (p->getNum() == 1) ? m = 105 : m = 15;
     xw.drawString(x + 50,  y + 55, p->getName(), strCol);
     xw.drawString(x + 5,   y + m, to_string(p->getHealth()), strCol);
-    xw.drawString(x + 105, y + m, to_string(p->getMana()), strCol);
+    xw.drawString(x + 110, y + m, to_string(p->getMana()), strCol);
 }
 
 void drawDescription(int x, int y, Xwindow &xw, string s, int width, Xwindow::Colour c) {
