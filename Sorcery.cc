@@ -77,11 +77,13 @@ int main(int argc, char *argv[]) {
     playerOne.addObserver(&board);
     playerTwo.addObserver(&board);
 
+    shared_ptr<GraphicBoard> gb= nullptr;
     if (graphics) {
-      GraphicBoard gb(800);
-      gb.setBoard(&board);
-      playerOne.addObserver(&gb);
-      playerTwo.addObserver(&gb);
+      auto g = make_shared<GraphicBoard>(800);
+      gb = g;
+      gb->setBoard(&board);
+      playerOne.addObserver(&*gb);
+      playerTwo.addObserver(&*gb);
     }
 
     playerOne.drawFromDeck(5); // draw 5 cards
