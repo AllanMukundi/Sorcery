@@ -21,16 +21,18 @@ void Board::setPlayer(Player *p, int playerNum) {
 }
 
 void Board::endTurn(Player *activePlayer, Player *nonActivePlayer) {
-  activePlayer->setState(State::EndTurn);
+  activePlayer->setActive(false);
+  nonActivePlayer->setActive(true);
+  //activePlayer->setState(State::EndTurn);
+  //activePlayer->notifyObservers();
+  //nonActivePlayer->setState(State::EndTurnOpp);
+  //nonActivePlayer->notifyObservers();
+  activePlayer->setState(State::StartTurnOpp);
   activePlayer->notifyObservers();
-  nonActivePlayer->setState(State::EndTurnOpp);
-  nonActivePlayer->notifyObservers();
   nonActivePlayer->changeMana(1);
   nonActivePlayer->drawFromDeck(1);
   nonActivePlayer->setState(State::StartTurn);
   nonActivePlayer->notifyObservers();
-  activePlayer->setState(State::StartTurnOpp);
-  activePlayer->notifyObservers();
 }
 
 vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
@@ -116,10 +118,10 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
             if (c->getType() == "Minion") {
               cout << "Playing minion: " << c->getName() << endl;
               cardsP1.push_back(dynamic_pointer_cast<Minion>(c));
-              playerOne->setState(State::MinionEnter);
-              playerOne->notifyObservers();
-              playerTwo->setState(State::MinionEnterOpp);
-              playerTwo->notifyObservers();
+              //playerOne->setState(State::MinionEnter);
+              //playerOne->notifyObservers();
+              //playerTwo->setState(State::MinionEnterOpp);
+              //playerTwo->notifyObservers();
             } else if (c->getType() == "Spell") {
                 dynamic_pointer_cast<Spell>(c)->useSpell(*this, *playerOne, otherSlot);
               cout << "Playing spell: " << c->getName() << endl;
@@ -150,6 +152,9 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
           playerOne->changeMana(-1 * c->getCost());
           playerOne->setMana(max(playerOne->getMana(), 0));
           playerOne->getHand().erase(playerOne->getHand().begin() + slot - 1); // must erase 
+          playerOne->notifyObservers();
+          //playerTwo->setState(State::MinionEnterOpp);
+          playerTwo->notifyObservers();
         } else {
             cout << "Not enough mana" << endl;
         }

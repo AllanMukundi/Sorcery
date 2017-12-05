@@ -65,17 +65,23 @@ int main(int argc, char *argv[]) {
       playerOne.shuffleDeck();
       playerTwo.shuffleDeck();
     }
-    playerOne.drawFromDeck(5); // draw 5 cards
-    playerTwo.drawFromDeck(5); // draw 5 cards
 
     activePlayer    = &playerOne;
     nonActivePlayer = &playerTwo;
+    activePlayer->setActive(true);
     Board board(testing);
     board.setPlayer(&playerOne, 1);
     board.setPlayer(&playerTwo, 2);
+
+    GraphicBoard gb(800);
+    gb.setBoard(&board);
     playerOne.addObserver(&board);
     playerTwo.addObserver(&board);
-    GraphicBoard gb(800);
+    playerOne.addObserver(&gb);
+    playerTwo.addObserver(&gb);
+
+    playerOne.drawFromDeck(5); // draw 5 cards
+    playerTwo.drawFromDeck(5); // draw 5 cards
 
     activePlayer->changeMana(1);
     string command;

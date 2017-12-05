@@ -37,6 +37,7 @@ class Board: public Observer {
     void setRitual(std::shared_ptr<Ritual> ritual, int playerNum);
     void sendNotification(int player, State s);
     void display();
+    friend class GraphicBoard;
 };
 
 #endif
