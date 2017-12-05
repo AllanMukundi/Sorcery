@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
     activePlayer    = &playerOne;
     nonActivePlayer = &playerTwo;
     activePlayer->setActive(true);
+    activePlayer->setState(State::StartTurn);
     Board board(testing);
     board.setPlayer(&playerOne, 1);
     board.setPlayer(&playerTwo, 2);

@@ -23,16 +23,16 @@ void Board::setPlayer(Player *p, int playerNum) {
 void Board::endTurn(Player *activePlayer, Player *nonActivePlayer) {
   activePlayer->setActive(false);
   nonActivePlayer->setActive(true);
-  //activePlayer->setState(State::EndTurn);
-  //activePlayer->notifyObservers();
-  //nonActivePlayer->setState(State::EndTurnOpp);
-  //nonActivePlayer->notifyObservers();
+  activePlayer->setState(State::EndTurn);
+  activePlayer->notifyObservers();
+  nonActivePlayer->setState(State::EndTurnOpp);
+  nonActivePlayer->notifyObservers();
   activePlayer->setState(State::StartTurnOpp);
   activePlayer->notifyObservers();
   nonActivePlayer->changeMana(1);
-  nonActivePlayer->drawFromDeck(1);
   nonActivePlayer->setState(State::StartTurn);
   nonActivePlayer->notifyObservers();
+  nonActivePlayer->drawFromDeck(1);
 }
 
 vector<shared_ptr<Minion>> &Board::getCards(int playerNum) {
@@ -91,6 +91,8 @@ void Board::useActivatedAbility(int playerNum, int slot, int targetPlayer, int o
           for (int i = 0; i < min(summonAmount, slotsAvailable); ++i) {
             shared_ptr<Minion> tmp = dynamic_pointer_cast<Minion>(Card::load(m->getSummonName()));
             cards.push_back(tmp); // TODO: need to setup state stuff for observer pattern
+            player->setState(State::MinionEnter);
+            player->notifyObservers();
           }
         }
       } else {
@@ -98,11 +100,13 @@ void Board::useActivatedAbility(int playerNum, int slot, int targetPlayer, int o
           vector<shared_ptr<Minion>> &targetCards = (targetPlayer == 1) ? cardsP1: cardsP2;
           int dmg = m->getAADamage();
           targetCards.at(otherSlot - 1)->changeDefence(-dmg);
+          player->notifyObservers();
         }
       }
       m->changeAction(-1);
       player->changeMana(-1 * m->getAC());
       player->setMana(max(player->getMana(), 0));
+      player->notifyObservers();
   } else {
       cout << "Not enough action points/mana to use an activated ability" << endl;
   }
@@ -118,10 +122,10 @@ void Board::playCardP1(int slot, int player, int otherSlot) {
             if (c->getType() == "Minion") {
               cout << "Playing minion: " << c->getName() << endl;
               cardsP1.push_back(dynamic_pointer_cast<Minion>(c));
-              //playerOne->setState(State::MinionEnter);
-              //playerOne->notifyObservers();
-              //playerTwo->setState(State::MinionEnterOpp);
-              //playerTwo->notifyObservers();
+              playerOne->setState(State::MinionEnter);
+              playerOne->notifyObservers();
+              playerTwo->setState(State::MinionEnterOpp);
+              playerTwo->notifyObservers();
             } else if (c->getType() == "Spell") {
                 dynamic_pointer_cast<Spell>(c)->useSpell(*this, *playerOne, otherSlot);
               cout << "Playing spell: " << c->getName() << endl;
@@ -170,10 +174,10 @@ void Board::playCardP2(int slot, int player, int otherSlot) {
             if (c->getType() == "Minion") {
               cout << "Playing minion: " << c->getName() << endl;
               cardsP2.push_back(dynamic_pointer_cast<Minion>(c));
-              //playerTwo->setState(State::MinionEnter);
-              //playerTwo->notifyObservers();
-              //playerOne->setState(State::MinionEnterOpp);
-              //playerOne->notifyObservers();
+              playerTwo->setState(State::MinionEnter);
+              playerTwo->notifyObservers();
+              playerOne->setState(State::MinionEnterOpp);
+              playerOne->notifyObservers();
             } else if (c->getType() == "Spell") {
                 dynamic_pointer_cast<Spell>(c)->useSpell(*this, *playerTwo, otherSlot);
             } else if (c->getType() == "Ritual") {
@@ -315,7 +319,7 @@ void Board::display() {
   for (int i = 0; i < cardHeight; ++i) {
     cout << EXTERNAL_BORDER_CHAR_UP_DOWN << reset;
     if (ritualP1) {
-      cout << cyan << ritualP1->display()[i] << reset;
+      cout << magenta << ritualP1->display()[i] << reset;
     } else {
       cout << yellow << CARD_TEMPLATE_EMPTY[i];
     }
@@ -361,7 +365,7 @@ void Board::display() {
   for (int i = 0; i < cardHeight; ++i) {
     cout << yellow << EXTERNAL_BORDER_CHAR_UP_DOWN << reset;
     if (ritualP2) {
-      cout << cyan << ritualP2->display()[i] << reset;
+      cout << magenta << ritualP2->display()[i] << reset;
     } else {
       cout << yellow << CARD_TEMPLATE_EMPTY[i] << reset;
     }

@@ -40,8 +40,12 @@ void drawDescription(int x, int y, Xwindow &xw, string s, int width, Xwindow::Co
     }
 }
 
-void drawCard(int x, int y, Xwindow &xw, shared_ptr<Card> c) {
-    xw.fillRectangle(x, y, cw, ch, col(c->getType()));
+void drawCard(int x, int y, Xwindow &xw, shared_ptr<Card> c, bool dead = false) {
+    if (dead) {
+      xw.fillRectangle(x, y, cw, ch, Xwindow::Red);
+    } else {
+      xw.fillRectangle(x, y, cw, ch, col(c->getType()));
+    }
     xw.drawString(x + 5, y + 15, c->getName(), strCol);
     xw.drawString(x + 110, y + 15, to_string(c->getCost()), strCol);
 
@@ -98,7 +102,7 @@ void GraphicBoard::notify(Player &p) {
     for (int i = 0; i < 5; ++i) {
       if (i == 0 && board->getRitual(1)) drawCard(s*i + 20,  bth, xw, board->getRitual(1));
       if (i == 2)                        drawPlayer(s*i + 20,bth, xw, board->playerOne);
-      if (i == 4 && p1g.size() != 0)     drawCard(s*i + 20,  bth, xw, p1g.back());
+      if (i == 4 && p1g.size() != 0)     drawCard(s*i + 20,  bth, xw, p1g.back(), true);
     }
 
     // row 2
@@ -117,7 +121,7 @@ void GraphicBoard::notify(Player &p) {
     }
 
     // active player hand
-    if (p.getActive()) {
+    if (p.getActive() && (p.getState() == State::StartTurn || p.getState() == State::MinionEnter)) {
       for (int i = 0; i < p.getHand().size(); ++i) {
         drawCard(s*i + 20, bth + ch*5 + 60, xw, hand.at(i));
       }

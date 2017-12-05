@@ -65,7 +65,7 @@ vector<shared_ptr<Card>>   &Player::getHand()  { return hand; }
 
 // Changers
 void Player::changeHealth(const int amount) { health += amount; notifyObservers(); }
-void Player::changeMana(const int amount)   { mana += amount; notifyObservers(); }
+void Player::changeMana(const int amount)   { mana += amount; }
 
 // Setters
 void Player::setState(const State newState) { state = newState; }
