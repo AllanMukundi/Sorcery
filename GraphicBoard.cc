@@ -48,9 +48,9 @@ void drawCard(int x, int y, Xwindow &xw, shared_ptr<Card> c) {
   if (c->getType() == "Minion") {
     shared_ptr<Minion> m = dynamic_pointer_cast<Minion>(c);
     xw.drawString(x + 80, y + 30, c->getType(), strCol);
-    if (m->getAC() !=0) {
-    xw.drawString(x + 5, y + 45, to_string(m->getAC()), strCol);
-    drawDescription(x + 5, y + 60, xw,c->getInfo(), cw, strCol); // print minion description
+    if (m->getAC() != 0) {
+      xw.drawString(x + 5, y + 45, to_string(m->getAC()), strCol);
+      drawDescription(x + 5, y + 60, xw,c->getInfo(), cw, strCol); // print minion description
     } else {
       drawDescription(x + 5, y + 50, xw,c->getInfo(), cw, strCol); // print minion description
 
